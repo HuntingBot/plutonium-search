@@ -61,7 +61,7 @@ def period_detection(upper_half):
                 # The pattern dies
                 return
 g.show("This is PlutoniumSearch v1.1")
-report.write("This is PlutoniumSearch v1.1")
+report.write("This is PlutoniumSearch v1.1" + "\n")
 
 begin = int(g.getstring("From slice:"))
 end = int(g.getstring("To slice: "))
@@ -71,8 +71,8 @@ all_slice = range(begin, end+1)
 
 for i in all_slice:
 	g.show("Slice " + str(i) + " begin")
-	report.write("Slice " + str(i) + " begin")
+	report.write("Slice " + str(i) + " begin" + "\n")
 	dfs(convert(i), 0)
 g.show("Search complete, " + str(found) + "results found")
-report.write("Search complete, " + str(found) + "results found")
+report.write("Search complete, " + str(found) + "results found" + "\n")
 report.close()
