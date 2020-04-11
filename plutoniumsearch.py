@@ -45,7 +45,6 @@ def period_detection(upper_half):
 	g.show(str(count) + "/" + str(2 ** (32 - preset)))
 	rows = upper_half.split("$")
 	full_rle = upper_half + "$" + "$".join(rows[::-1]) + "!"
-	g.note(full_rle)
 	
 	pattern = g.parse(full_rle)
 	g.new("PlutoniumSearch")
