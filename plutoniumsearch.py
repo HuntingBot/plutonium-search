@@ -25,10 +25,11 @@ def convert(slice_id):
 	return known_cells
 
 def dfs(known_cells, depth):
+	global preset
 	if depth == 32 - preset:
 		period_detection(known_cells)
 		return
-	if depth % 8 == 0:
+	if (preset + depth) % 8 == 0:
 		known_cells += "$"
 	dfs(known_cells + "b", depth+1)
 	dfs(known_cells + "o", depth+1)
@@ -68,8 +69,8 @@ def period_detection(upper_half):
 	except:
 		# The pattern dies
 		return
-g.show("This is PlutoniumSearch v1.2")
-report.write("This is PlutoniumSearch v1.2" + "\n")
+g.show("This is PlutoniumSearch v1.1")
+report.write("This is PlutoniumSearch v1.1" + "\n")
 
 begin = int(g.getstring("From slice:"))
 end = int(g.getstring("To slice: "))
