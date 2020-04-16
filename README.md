@@ -3,6 +3,8 @@ A low-tech distributed brute-force approach of cellular automata pattern searchi
 
 Lastest build: v1.2
 
+**WARNING: Version 1.2 has a serious bug. It causes results to be ignored. Use v1.1 instead until it's fixed.**
+
 ## What's new
 
 ### v1.2
