@@ -7,17 +7,17 @@ Lastest build: v1.2
 
 ## What's new
 
-### v1.2
+### v2.0
 
-- You can now divide and merge slices.
-
-- Fixed a report formatting bug.
+- Completely rewritten.
 
 ## Requires
 
 This script should be run within [Golly](http://golly.sourceforge.net/)
 
 ## How to use
+
+(Assuming PlutoniumSearch v1. Will be replaced soon.)
 
 Open Golly, go to `Control > Set Rule...` and set the rule to `B2n3/S23-q`. Then go to `File > Run Script...`, and open the script in the dialog.
 
