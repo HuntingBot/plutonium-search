@@ -1,87 +1,69 @@
 import golly as g
 
-count = 0
-found = 0
-period_count = [0] * 50
+# Parameters
+bx = 4
+by = 4
+boring_periods = [1, 2, 6]
 
-report = open("report.txt", "w")
+# Do not change this
+patt_count = 0
+cnt = [1] * 999
 
-def convert(slice_id):
-	# Convert slice number into binary
-	global preset
-	j = 0
-	known_cells = ""
-	for i in range(preset-1, -1, -1):
-
-		if j % 8 == 0:
-			known_cells += "$"
-		if slice_id // 2 ** i:
-			known_cells += "o"
-			slice_id -= 2 ** i
-		else:
-			known_cells += "b"
-		j += 1
-	known_cells = known_cells[1:]
-	return known_cells
-
-def dfs(known_cells, depth):
-	global preset
-	if depth == 32 - preset:
-		period_detection(known_cells)
+def dfs(known_cells, depth, cell_count):
+	global bx, by
+	if depth >= bx * by:
+		run_patt(known_cells)
 		return
-	if (preset + depth) % 8 == 0:
-		known_cells += "$"
-	dfs(known_cells + "b", depth+1)
-	dfs(known_cells + "o", depth+1)
+	if depth % bx == 0:
+		dfs(known_cells + "$b", depth + 1, cell_count)
+		dfs(known_cells + "$o", depth + 1, cell_count + 1)
+		return
+	dfs(known_cells + "b", depth + 1, cell_count)
+	dfs(known_cells + "o", depth + 1, cell_count + 1)
 
-def period_detection(upper_half):
-	global count
-	global found
-	count += 1
-
-	boring_periods = [1, 2, 3, 4, 6, 14, 15]
-	
-	# Mirroring
-	g.show(str(count) + "/" + str(2 ** (32 - preset)))
-	rows = upper_half.split("$")
-	full_rle = upper_half + "$" + "$".join(rows[::-1]) + "!"
-	
-	pattern = g.parse(full_rle)
+def run_patt(known_cells):
+	global patt_count, meth_count
 	g.new("PlutoniumSearch")
-	g.putcells(pattern, 0, 0)
-
-	# Period detection
-	g.run(25)
-	try:
-		h = g.hash(g.getrect())
-		for i in range(1, 50):
+	g.reset()
+	g.update()
+	patt_count += 1
+	#patt = g.parse(known_cells + "!")
+	patt = g.parse(known_cells[1:] + "!")
+	#g.note(known_cells[1:] + "!")
+	g.putcells(patt)
+	g.update()
+	hashlist = {}
+	for gene in range(999):
+		if g.empty():
+			break
+		if g.hash(g.getrect()) in hashlist:
+			p = int(g.getgen()) - hashlist[g.hash(g.getrect())]
+			if not p in boring_periods:
+				g.reset()
+				g.save("p" + str(p) + "_" + str(cnt[p]) + ".rle", "rle")
+				cnt[p] += 1
+			break
+		else:
+			hashlist[g.hash(g.getrect())] = int(g.getgen())
 			g.run(1)
-			if g.hash(g.getrect()) == h:
-				# Oscillates
-				if not i in boring_periods:
-					g.reset()
-					period_count[i] += 1
-					g.save("p" + str(i) + "_" + str(period_count[i]) + ".rle", "rle")
-					found += 1
-					report.write("Found p" + str(i) + "\n")
-				break
-	except:
-		# The pattern dies
-		return
-g.show("This is PlutoniumSearch v1.1")
-report.write("This is PlutoniumSearch v1.1" + "\n")
+		"""
+		except:
+			# Pattern dies
+			if int(g.getgen()) > min_lifespan:
+				meth_count += 1
+				newlifespan = int(g.getgen())
+				g.new("Saving methuselah")
+				g.putcells(patt)
+				try:
+					g.save("diehard-" + str(newlifespan) + ".rle", "rle")
+				except:
+					pass
+				g.update()
+				#max_final_pop = newpop
+			break"""
+	#g.warn(str(hashlist))
+	g.show(str(patt_count) + "/" + str(2 ** (bx * by)))
 
-begin = int(g.getstring("From slice:"))
-end = int(g.getstring("To slice: "))
-preset = int(g.getstring("Specify the number of preset cells: ", "8"))
-report.write("From slice: " + str(begin) + "\nTo slice: " + str(end) + "\n")
-
-all_slice = range(begin, end+1)
-
-for i in all_slice:
-	g.show("Slice " + str(i) + " begin")
-	report.write("Slice " + str(i) + " begin" + "\n")
-	dfs(convert(i), 0)
-g.show("Search complete, " + str(found) + " results found")
-report.write("Search complete, " + str(found) + " results found" + "\n")
-report.close()
+g.autoupdate(True)
+dfs("", 0, 0)
+#run_patt("$3o$2o$o!")
