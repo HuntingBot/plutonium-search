@@ -5,7 +5,10 @@ w = int(g.getstring("Search width:", "8"))
 h = int(g.getstring("Search height:", "8"))
 sym = g.getstring("Symmetry (C1, D2)", "D2")
 seed = int(g.getstring("Slice number:"))
-boring_periods = [1, 2, 3, 4, 6, 8, 10]
+if sym == "C1":
+	boring_periods = [1, 2, 3, 4, 6, 8, 10]
+if sym == "D2":
+	boring_periods = [1, 2, 3, 4, 6, 10, 14, 15]
 preset = int(g.getstring("Preset cells:", "8"))
 
 # Do not change this
@@ -96,7 +99,7 @@ def run_patt(known_cells):
 	#g.warn(str(hashlist))
 	g.show(str(patt_count) + "/" + str(2 ** (bx * by)))
 
-g.autoupdate(True)
+#g.autoupdate(True)
 if sym == "C1":
 	bx = w
 	by = h
